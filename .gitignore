@@ -1,0 +1,8 @@
+/.vscode
+/employeeNumber.ps1
+/openam-export-prd(0-employeeNumber).json
+/openam-export-prd(empty-employeeNumber).json
+/openam-export-prd(NOTint-employeeNumber).json
+/openam-export-prd.csv
+/openam-export-prd.json
+/openam-export-prd.zip
