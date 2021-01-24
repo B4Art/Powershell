@@ -11,11 +11,12 @@ Param (
 function Get-Between{
 	[CmdletBinding()]
 	Param (
-		[Parameter(Mandatory, ValueFromPipeline, Position = 0)]
+		[Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName, Position = 0)]
 		[System.Object]$List,
 		[Parameter(Mandatory, Position = 1)]
-		# [ArgumentCompletions({([ref]$List | Get-Member -MemberType NoteProperty).Name})]
+		# [ValidateScript( {($fakeBoundParameter["List"] | Get-Member -MemberType NoteProperty | ForEach-Object Name)}) ]
 		[string] $NotePropertyName,
+		[Parameter(Position = 2)]
 		[switch] $XorNotBetween
 	)
 	
@@ -31,27 +32,12 @@ function Get-Between{
 	} End {
 	}
 }
-
+#
 $GetNotePropertyNameCompleter = {
 	param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameter)
-	Return ($fakeBoundParameter["List"] | Get-Member -MemberType NoteProperty | ForEach-Object { $_.Name })
+	Return ($fakeBoundParameter["List"] | Get-Member -MemberType NoteProperty | ForEach-Object Name)
 }
 
 Register-ArgumentCompleter -CommandName Get-Between -ParameterName NotePropertyName -ScriptBlock $GetNotePropertyNameCompleter
-
-<#
-$ScriptBlock = [scriptblock]::Create( {
-		param ( $CommandName,
-			$ParameterName,
-			$WordToComplete,
-			$CommandAst,
-			$FakeBoundParameters )
- 
-		$NotePropertyNames = $List | Get-Member -MemberType NoteProperty
-		$NotePropertyNames.Name | ForEach-Object { $_ }
-	})
- 
-Register-ArgumentCompleter -CommandName Get-Between -ParameterName NotePropertyName -ScriptBlock $ScriptBlock
-
-<##>
+# Register-ArgumentCompleter -ParameterName NotePropertyName -ScriptBlock $GetNotePropertyNameCompleter
 #>
