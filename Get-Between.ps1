@@ -35,7 +35,7 @@ function Get-Between{
 #
 $GetNotePropertyNameCompleter = {
 	param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameter)
-	Return ($fakeBoundParameter["List"] | Get-Member -MemberType NoteProperty | ForEach-Object Name)
+	($fakeBoundParameter["List"] | Get-Member -MemberType NoteProperty).Where( { $_.Name -like "$wordToComplete*" }).ForEach( { [System.Management.Automation.CompletionResult]::new($_.Name, $_.Name, 'ParameterValue', $_.Name) })
 }
 
 Register-ArgumentCompleter -CommandName Get-Between -ParameterName NotePropertyName -ScriptBlock $GetNotePropertyNameCompleter
