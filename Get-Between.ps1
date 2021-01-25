@@ -14,7 +14,10 @@ function Get-Between{
 		[Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName, Position = 0)]
 		[System.Object]$List,
 		[Parameter(Mandatory, Position = 1)]
-		# [ValidateScript( {($fakeBoundParameter["List"] | Get-Member -MemberType NoteProperty | ForEach-Object Name)}) ]
+		[ValidateScript( {
+			param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameter)
+			($fakeBoundParameter["List"] | Get-Member -MemberType NoteProperty).Where( { $_.Name -like "$wordToComplete*" }).ForEach( { [System.Management.Automation.CompletionResult]::new($_.Name, $_.Name, 'ParameterValue', $_.Name) }) 
+		}) ]
 		[string] $NotePropertyName,
 		[Parameter(Position = 2)]
 		[switch] $XorNotBetween
@@ -32,7 +35,7 @@ function Get-Between{
 	} End {
 	}
 }
-#
+<#
 $GetNotePropertyNameCompleter = {
 	param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameter)
 	($fakeBoundParameter["List"] | Get-Member -MemberType NoteProperty).Where( { $_.Name -like "$wordToComplete*" }).ForEach( { [System.Management.Automation.CompletionResult]::new($_.Name, $_.Name, 'ParameterValue', $_.Name) })
