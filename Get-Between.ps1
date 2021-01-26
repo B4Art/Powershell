@@ -14,7 +14,15 @@ function Get-Between{
 		[Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName, Position = 0)]
 		[System.Object]$List,
 		[Parameter(Mandatory, Position = 1)]
-		#
+		<##>
+		[ArgumentCompleter({
+			param($cmdName, $paramName, $wordToComplete, $commandAst, $fakeBoundParameter)
+			if ($obj = $fakeBoundParameters['List']) {
+        	  	@($obj.psobject.Properties.Name) -like "$wordToComplete*"
+        	}
+      	})]
+		#>
+		<#
 		[ValidateScript( {
 			param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameter)
 			($fakeBoundParameter["List"] | Get-Member -MemberType NoteProperty).Where( {
@@ -54,7 +62,7 @@ $GetNotePropertyNameCompleter = {
 Register-ArgumentCompleter -CommandName Get-Between -ParameterName NotePropertyName -ScriptBlock $GetNotePropertyNameCompleter
 # Register-ArgumentCompleter -ParameterName NotePropertyName -ScriptBlock $GetNotePropertyNameCompleter
 #>
-
+<#
 $h = Get-Content '.\examples\import_from_openam_response.json' | ConvertFrom-Json | Select-Object id, username, email, @{l = 'customerNumber'; e = { [string]$e = $_.attributes.customerNumber; $e = $e.Trim(); Try { [System.Text.Encoding]::UTF8.GetString( [System.Convert]::FromBase64String( $e ) ) } catch { $e } } }
 
 $e = $h |
@@ -63,5 +71,6 @@ $f = $h |
     Select-Object *, @{l = 'intDubbel'; e = {$e[$_.customerNumber].Count}}
 
 ($f | Get-Member -MemberType NoteProperty).Name
+#>
 
 # Get-Between -List $f -NotePropertyName 
