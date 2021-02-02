@@ -22,30 +22,17 @@ function get-Between{
 	)
 
 	Begin {
-			$min = ($List.$NotePropertyName | Measure-Object -Minimum).Minimum
-			$max = ($List.$NotePropertyName | Measure-Object -Maximum).Maximum
-	} Process {
-			If ($XorNotBetween) {
-					Write-Output $List.Where({$_.$NotePropertyName -in ($min, $max)})
-			} else {
-					Write-Output $List.Where({$_.$NotePropertyName -notin ($min, $max)})
-			}
+                $min = ($List.$NotePropertyName | Measure-Object -Minimum).Minimum
+                $max = ($List.$NotePropertyName | Measure-Object -Maximum).Maximum
+        } Process {
+                If ($XorNotBetween) {
+                        Write-Output $List.Where({$_.$NotePropertyName -in ($min, $max)})
+                } else {
+                        Write-Output $List.Where({$_.$NotePropertyName -notin ($min, $max)})
+                }
 	} End {
-			}
+        }
 }
-<#
-$GetNotePropertyNameCompleter = {
-        param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameter)
-        ( $fakeBoundParameter["List"] | Get-Member -MemberType NoteProperty ).Where( {
-                $_.Name -like "$wordToComplete*"
-        } ).ForEach( {
-                [System.Management.Automation.CompletionResult]::new($_.Name, $_.Name, 'ParameterValue', $_.Name)
-        } )
-}
-
-Register-ArgumentCompleter -CommandName Get-Between -ParameterName NotePropertyName -ScriptBlock $GetNotePropertyNameCompleter
-# Register-ArgumentCompleter -ParameterName NotePropertyName -ScriptBlock $GetNotePropertyNameCompleter
-#>
 <#
 $h = Get-Content '.\examples\import_from_openam_response.json' | ConvertFrom-Json | Select-Object id, username, email, @{l = 'customerNumber'; e = { [string]$e = $_.attributes.customerNumber; $e = $e.Trim(); Try { [System.Text.Encoding]::UTF8.GetString( [System.Convert]::FromBase64String( $e ) ) } catch { $e } } }
 
